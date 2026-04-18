@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>XAI Notemaker | Smart Notes from Any Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body data-has-result="{{ 'true' if result else 'false' }}" data-has-errors="{{ 'true' if errors else 'false' }}">
+    <div class="site-layout">
+        <div class="content-shell">
+            <div class="topbar">
+                <div class="topbar__inner">Research, study, media, business, and finance note making.</div>
+            </div>
+
+            <header class="site-header" id="home">
+                <div class="brand-block">
+                    <a class="brand" href="#home" aria-label="XAI Notemaker home">
+                        <span class="brand-mark" aria-hidden="true">
+                            <svg class="brand-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                                <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path class="logo-branch" d="M31 98c-11-8-17-20-17-34 0-15 7-29 20-38" />
+                                    <path class="logo-branch" d="M89 98c11-8 17-20 17-34 0-15-7-29-20-38" />
+                                    <path class="logo-leaf-fill" d="M27 81c4-6 8-8 13-8-1 6-4 10-10 12" />
+                                    <path class="logo-leaf-fill" d="M23 68c4-5 8-7 13-7-1 6-5 9-11 11" />
+                                    <path class="logo-leaf-fill" d="M25 55c4-5 8-7 13-7-1 6-5 9-11 11" />
+                                    <path class="logo-leaf-fill" d="M93 81c-4-6-8-8-13-8 1 6 4 10 10 12" />
+                                    <path class="logo-leaf-fill" d="M97 68c-4-5-8-7-13-7 1 6 5 9 11 11" />
+                                    <path class="logo-leaf-fill" d="M95 55c-4-5-8-7-13-7 1 6 5 9 11 11" />
+                                    <path class="logo-scale" d="M60 22v52" />
+                                    <path class="logo-scale" d="M43 36h34" />
+                                    <path class="logo-scale-light" d="M50 36 39 48" />
+                                    <path class="logo-scale-light" d="M70 36 81 48" />
+                                    <path class="logo-scale-light" d="M28 48h22" />
+                                    <path class="logo-scale-light" d="M70 48h22" />
+                                    <path class="logo-scale-light" d="M33 48 28 59h22l-5-11" />
+                                    <path class="logo-scale-light" d="M75 48 70 59h22l-5-11" />
+                                    <path class="logo-scale" d="M47 82h26" />
+                                </g>
+                            </svg>
+                        </span>
+                        <span class="brand-copy">
+                            <span class="brand-name">XAI Notemaker</span>
+                            <span class="brand-tagline">Smart notes for academic, education, media, business, and finance workflows.</span>
+                        </span>
+                    </a>
+
+                    <nav class="site-nav" aria-label="Primary navigation">
+                        <a href="#home">Home</a>
+                        <a href="#guide">Guide</a>
+                        <a href="#selection">Selection</a>
+                    </nav>
+                </div>
+            </header>
+
+            {% if errors %}
+            <section class="alert-stack" id="feedback">
+                {% for error in errors %}
+                <div class="alert alert-error">{{ error }}</div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <section class="hero-panel">
+                <div class="hero-copy">
+                    <p class="eyebrow">XAI Notemaker Workspace</p>
+                    <h1>Build focused notes from your own source bundle.</h1>
+                    <p class="hero-text">
+                        Upload your source materials, choose a note style tailored to your field, and generate structured outputs for
+                        research, study, media, business, and finance workflows in one place.
+                    </p>
+                    <p class="hero-text">
+                        Runs on a built-in local note engine, so you do not need OpenAI API credits. Note outputs are capped at 50%
+                        of the original source length.
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <span class="stat-value">{{ prompt_options|length }}</span>
+                            <span class="stat-label">note styles</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value">Up to {{ max_document_uploads }}</span>
+                            <span class="stat-label">PDF, DOCX, or TXT uploads per note</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value">{{ max_upload_mb }}MB</span>
+                            <span class="stat-label">maximum upload size per request</span>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="hero-preview">
+                    <div class="preview-card">
+                        <p class="eyebrow">Note Style Preview</p>
+                        <h2 id="promptPreviewTitle">{{ active_prompt.name }}</h2>
+                        <p class="preview-pill" id="promptPreviewCategory">{{ active_prompt.category }}</p>
+                        <p id="promptPreviewDescription">{{ active_prompt.description }}</p>
+                        <div class="preview-detail">
+                            <span class="detail-label">Deliverable</span>
+                            <p id="promptPreviewDeliverable">{{ active_prompt.deliverable }}</p>
+                        </div>
+                        <div class="preview-detail">
+                            <span class="detail-label">Best For</span>
+                            <p id="promptPreviewGuidance">{{ active_prompt.ui_guidance }}</p>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <main class="workspace-grid">
+                <section class="builder-column">
+                    <form class="builder-card" method="post" enctype="multipart/form-data" id="draftForm">
+                        <div class="section-heading">
+                            <p class="eyebrow">Source Bundle</p>
+                            <h2>Load the materials</h2>
+                        </div>
+
+                        <label class="upload-zone" for="documents">
+                            <input
+                                id="documents"
+                                name="documents"
+                                type="file"
+                                accept=".pdf,.docx,.txt"
+                                multiple
+                                data-max-files="{{ max_document_uploads }}"
+                            >
+                            <span class="upload-title">Drop PDF, DOCX, or TXT files here, or click to browse</span>
+                            <span class="upload-subtitle">
+                                Accepted: {{ accepted_types }}. Upload up to {{ max_document_uploads }} documents and keep the
+                                combined bundle under {{ "{:,}".format(max_input_chars) }} characters.
+                            </span>
+                            <span class="upload-files" id="fileSelectionSummary">No files selected yet.</span>
+                        </label>
+
+                        <div class="field-block">
+                            <label for="pasted_text">Or paste source material</label>
+                            <textarea id="pasted_text" name="pasted_text" rows="10" placeholder="Paste research text, lecture notes, reports, transcripts, articles, meeting notes, or other source material here...">{{ form.pasted_text }}</textarea>
+                        </div>
+
+                        <div class="section-heading compact">
+                            <p class="eyebrow">Note Type</p>
+                            <h2>Choose the note style</h2>
+                        </div>
+
+                        <div class="prompt-grid">
+                            {% for prompt in prompt_options %}
+                            <label class="prompt-card {% if form.prompt_id == prompt.id %}is-active{% endif %}" data-prompt-card data-prompt-id="{{ prompt.id }}">
+                                <input type="radio" name="prompt_id" value="{{ prompt.id }}" {% if form.prompt_id == prompt.id %}checked{% endif %}>
+                                <span class="prompt-number">{{ prompt.number }}</span>
+                                <span class="prompt-name">{{ prompt.name }}</span>
+                                <span class="prompt-category">{{ prompt.category }}</span>
+                                <p>{{ prompt.description }}</p>
+                            </label>
+                            {% endfor %}
+                        </div>
+
+                        <div class="section-heading compact">
+                            <p class="eyebrow">Refinement</p>
+                            <h2>Tune the output</h2>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field-block">
+                                <label for="audience_id">Audience</label>
+                                <select id="audience_id" name="audience_id">
+                                    {% for audience in audience_options %}
+                                    <option value="{{ audience.id }}" {% if form.audience_id == audience.id %}selected{% endif %}>{{ audience.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="field-block">
+                                <label for="draft_title">Note title</label>
+                                <input id="draft_title" name="draft_title" type="text" value="{{ form.draft_title }}" placeholder="Example: Market outlook notes or Research methods summary">
+                            </div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="custom_instructions">Custom instructions</label>
+                            <textarea id="custom_instructions" name="custom_instructions" rows="5" placeholder="Add any extra direction for tone, length, focus sections, or formatting...">{{ form.custom_instructions }}</textarea>
+                        </div>
+
+                        <div class="builder-footer">
+                            <button type="submit" class="primary-button" id="generateButton">Generate notes</button>
+                            <p class="helper-text">Best results come from readable source bundles, the right note style, and clear instructions. Local generation keeps the result at or below 50% of the source word count.</p>
+                        </div>
+                    </form>
+                </section>
+
+                <aside class="support-column">
+                    <section class="support-card" id="guide">
+                        <div class="section-heading compact">
+                            <p class="eyebrow">Guide</p>
+                            <h2>Structured note support</h2>
+                        </div>
+                        <ol class="support-list">
+                            <li>Upload no more than {{ max_document_uploads }} strong source documents for each note-generation run.</li>
+                            <li>Choose the note style that best matches your field and task instead of forcing a generic summary.</li>
+                            <li>Select the audience so the output lands at the right depth and tone.</li>
+                            <li>Use custom instructions to narrow focus, format, and exclusions before generating.</li>
+                        </ol>
+                    </section>
+
+                    <section class="support-card" id="selection">
+                        <div class="section-heading compact">
+                            <p class="eyebrow">Selection</p>
+                            <h2>Prompt-guided note making</h2>
+                        </div>
+                        <p class="support-highlight" id="selectionSummary">{{ active_prompt.name }}</p>
+                        <p class="support-copy">
+                            Any of the {{ prompt_options|length }} note styles can work with your uploaded PDF, DOCX, and TXT bundle
+                            to create structured outputs across general, academic, education, media, business, and finance use cases.
+                        </p>
+                        <p id="selectionGuidance">{{ active_prompt.ui_guidance }}</p>
+                    </section>
+                </aside>
+            </main>
+
+            {% if result %}
+            <section class="result-shell" id="result">
+                <div class="section-heading">
+                    <p class="eyebrow">Generated Output</p>
+                    <h2>{{ result.draft_title }}</h2>
+                </div>
+
+                <div class="result-toolbar">
+                    <div class="result-meta">
+                        <span>{{ result.prompt_name }}</span>
+                        <span>{{ result.audience_name }}</span>
+                        <span>{{ result.source_count }} sources</span>
+                        <span>{{ "{:,}".format(result.word_count) }} input words</span>
+                        <span>{{ "{:,}".format(result.output_word_count) }} output words</span>
+                    </div>
+                    <button type="button" class="secondary-button" id="copyResultButton">Copy notes</button>
+                </div>
+
+                <div class="result-layout">
+                    <aside class="result-sources">
+                        <h3>Source materials</h3>
+                        <ul>
+                            {% for source_name in result.source_names %}
+                            <li>{{ source_name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </aside>
+
+                    <article class="result-card">
+                        <pre id="draftResult">{{ result.content }}</pre>
+                    </article>
+                </div>
+            </section>
+            {% endif %}
+        </div>
+
+        <aside class="ad-rail" aria-label="Advertising spaces">
+            <div class="ad-slot ad-slot--small"><span>Ad Space<br>300 x 250</span></div>
+            <div class="ad-slot ad-slot--small"><span>Ad Space<br>300 x 250</span></div>
+            <div class="ad-slot ad-slot--tall"><span>Ad Space<br>300 x 600</span></div>
+            <div class="ad-slot ad-slot--tall"><span>Ad Space<br>300 x 600</span></div>
+        </aside>
+    </div>
+
+    <script id="promptData" type="application/json">{{ prompt_options | tojson }}</script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

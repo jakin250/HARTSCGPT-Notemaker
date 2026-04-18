@@ -1,0 +1,11 @@
+.env
+venv/
+__pycache__/
+*.pyc
+logs/
+output/
+storage/__pycache__/
+app/__pycache__/
+ai/__pycache__/
+core/__pycache__/
+input_pdfs/
