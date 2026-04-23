@@ -10,6 +10,52 @@ const generateButton = document.getElementById("generateButton");
 const copyResultButton = document.getElementById("copyResultButton");
 const draftResult = document.getElementById("draftResult");
 const maxFiles = fileInput ? Number(fileInput.dataset.maxFiles || "0") : 0;
+const themeToggle = document.getElementById("themeToggle");
+
+function applyTheme(theme) {
+    document.body.dataset.theme = theme;
+    window.localStorage.setItem("hartscgpt-theme", theme);
+
+    if (themeToggle) {
+        const isDark = theme === "dark";
+        themeToggle.textContent = isDark ? "Light mode" : "Dark mode";
+        themeToggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+    }
+}
+
+function initializeTheme() {
+    const storedTheme = window.localStorage.getItem("hartscgpt-theme");
+    applyTheme(storedTheme === "dark" ? "dark" : "light");
+
+    themeToggle?.addEventListener("click", () => {
+        applyTheme(document.body.dataset.theme === "dark" ? "light" : "dark");
+    });
+}
+
+function initializeTranslateWidget() {
+    const translateRoot = document.getElementById("google_translate_element");
+    if (!translateRoot) {
+        return;
+    }
+
+    window.googleTranslateElementInit = () => {
+        if (!window.google?.translate?.TranslateElement) {
+            return;
+        }
+
+        new window.google.translate.TranslateElement({
+            pageLanguage: "en",
+            includedLanguages: "af,ar,de,en,es,fr,hi,it,ja,ko,nl,pt,ru,sw,tr,ur,vi,zh-CN,zh-TW,zu",
+            autoDisplay: false,
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+        }, "google_translate_element");
+    };
+
+    const script = document.createElement("script");
+    script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+    document.head.appendChild(script);
+}
 
 function updatePromptPreview(promptId) {
     const prompt = promptLookup[promptId];
@@ -92,3 +138,6 @@ if (document.body.dataset.hasResult === "true") {
 } else if (document.body.dataset.hasErrors === "true") {
     document.getElementById("feedback")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
+initializeTheme();
+initializeTranslateWidget();
