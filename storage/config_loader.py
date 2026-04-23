@@ -14,12 +14,14 @@ def _as_bool(value, default=False):
 
 
 def get_config():
+    configured_max_input_chars = int(os.getenv("LRW_MAX_INPUT_CHARS", "250000"))
+
     return {
         "note_reduction_ratio": min(
             max(float(os.getenv("NOTE_REDUCTION_RATIO", "0.5")), 0.1),
             0.5,
         ),
-        "max_input_chars": int(os.getenv("LRW_MAX_INPUT_CHARS", "120000")),
+        "max_input_chars": max(configured_max_input_chars, 250000),
         "max_upload_mb": int(os.getenv("MAX_UPLOAD_MB", "20")),
         "secret_key": os.getenv("FLASK_SECRET_KEY", "xai-notemaker-local-dev"),
         "host": os.getenv("FLASK_HOST", "0.0.0.0"),

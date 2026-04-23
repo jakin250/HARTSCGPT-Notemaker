@@ -44,6 +44,7 @@ def get_max_document_uploads():
 def build_material_bundle(uploaded_files, pasted_text, max_input_chars):
     sections = []
     source_names = []
+    source_char_count = 0
     valid_uploads = [
         uploaded_file
         for uploaded_file in uploaded_files
@@ -86,11 +87,17 @@ def build_material_bundle(uploaded_files, pasted_text, max_input_chars):
 
         source_names.append(safe_name)
         sections.append(f"Source: {safe_name}\n\n{prepared_text}")
+        source_char_count += len(prepared_text)
 
     pasted_text = (pasted_text or "").strip()
     if pasted_text:
+        prepared_pasted_text = _prepare_text_for_ai(pasted_text)
+        if not prepared_pasted_text:
+            raise ValueError("The pasted text did not contain readable content.")
+
         source_names.append("Pasted text")
-        sections.append(f"Source: Pasted text\n\n{_prepare_text_for_ai(pasted_text)}")
+        sections.append(f"Source: Pasted text\n\n{prepared_pasted_text}")
+        source_char_count += len(prepared_pasted_text)
 
     if not sections:
         raise ValueError(
@@ -100,10 +107,10 @@ def build_material_bundle(uploaded_files, pasted_text, max_input_chars):
     compiled_text = "\n\n" + ("\n\n---\n\n".join(sections))
     char_count = len(compiled_text)
 
-    if char_count > max_input_chars:
+    if source_char_count > max_input_chars:
         raise ValueError(
-            "The combined materials are too large for one note. "
-            "Upload fewer documents or split the text into a smaller bundle and try again."
+            "The combined source text is too large for one note. "
+            f"Limit: {max_input_chars:,} characters. Current source text: {source_char_count:,} characters."
         )
 
     return MaterialBundle(

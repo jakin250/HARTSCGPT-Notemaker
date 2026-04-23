@@ -118,31 +118,26 @@ a {
     height: 70px;
 }
 
-.logo-branch,
-.logo-scale,
-.logo-scale-light {
+.logo-quill-shaft,
+.logo-quill-feather,
+.logo-quill-detail {
     fill: none;
 }
 
-.logo-branch {
-    stroke: var(--olive);
-    stroke-width: 3.5;
-}
-
-.logo-leaf-fill {
+.logo-quill-feather {
     fill: rgba(86, 107, 47, 0.22);
     stroke: var(--olive);
-    stroke-width: 1.5;
+    stroke-width: 2.2;
 }
 
-.logo-scale {
+.logo-quill-shaft {
     stroke: #111111;
     stroke-width: 4;
 }
 
-.logo-scale-light {
-    stroke: #111111;
-    stroke-width: 2.6;
+.logo-quill-detail {
+    stroke: var(--olive);
+    stroke-width: 2.4;
 }
 
 .brand-copy {
