@@ -32,18 +32,18 @@ body {
 }
 
 body[data-theme="dark"] {
-    --paper: #1b1d1a;
-    --paper-soft: #232621;
-    --ink: #f0f1ec;
-    --ink-soft: #c2c6bc;
-    --line: rgba(235, 238, 228, 0.14);
-    --line-strong: rgba(235, 238, 228, 0.28);
-    --olive: #b5c98e;
-    --olive-soft: rgba(181, 201, 142, 0.12);
-    --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    --paper: #000000;
+    --paper-soft: #000000;
+    --ink: #ffffff;
+    --ink-soft: #ffffff;
+    --line: rgba(255, 255, 255, 0.2);
+    --line-strong: rgba(255, 255, 255, 0.35);
+    --olive: #ffffff;
+    --olive-soft: rgba(255, 255, 255, 0.12);
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
     background:
-        radial-gradient(circle at top left, rgba(181, 201, 142, 0.08), transparent 24%),
-        linear-gradient(180deg, #121411 0%, #171914 52%, #1d201a 100%);
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 24%),
+        linear-gradient(180deg, #000000 0%, #050505 52%, #000000 100%);
 }
 
 a {
@@ -618,6 +618,43 @@ textarea {
     border: 1px solid var(--line);
     background: #ffffff;
     color: var(--ink);
+}
+
+body[data-theme="dark"] .site-nav a,
+body[data-theme="dark"] .stat-card,
+body[data-theme="dark"] .preview-card,
+body[data-theme="dark"] .result-card,
+body[data-theme="dark"] .result-sources,
+body[data-theme="dark"] .upload-zone,
+body[data-theme="dark"] .prompt-card,
+body[data-theme="dark"] textarea,
+body[data-theme="dark"] select,
+body[data-theme="dark"] input[type="text"] {
+    background: #000000;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body[data-theme="dark"] .primary-button,
+body[data-theme="dark"] .secondary-button,
+body[data-theme="dark"] .theme-toggle,
+body[data-theme="dark"] #google_translate_element .goog-te-gadget-simple {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #ffffff !important;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] .primary-button:hover,
+body[data-theme="dark"] .secondary-button:hover,
+body[data-theme="dark"] .theme-toggle:hover,
+body[data-theme="dark"] .theme-toggle:focus-visible,
+body[data-theme="dark"] .site-nav a:hover,
+body[data-theme="dark"] .site-nav a:focus-visible {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+    box-shadow: none;
 }
 
 .primary-button:hover,
