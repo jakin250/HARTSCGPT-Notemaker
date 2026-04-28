@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Homepage - Main note-taking interface -->
+  <url>
+    <loc>https://hartscgpt-notemaker.vercel.app/</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Notes storage endpoint (likely API/database interface) -->
+  <url>
+    <loc>https://hartscgpt-notemaker.vercel.app/storage</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Core application logic -->
+  <url>
+    <loc>https://hartscgpt-notemaker.vercel.app/core</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  
+  <!-- AI processing endpoint -->
+  <url>
+    <loc>https://hartscgpt-notemaker.vercel.app/ai</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  <!-- Application interface -->
+  <url>
+    <loc>https://hartscgpt-notemaker.vercel.app/app</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Sitemap itself -->
+  <url>
+    <loc>https://hartscgpt-notemaker.vercel.app/sitemap.xml</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+</urlset>
