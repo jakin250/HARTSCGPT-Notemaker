@@ -206,13 +206,41 @@ a {
 }
 
 .translate-widget-shell {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
+}
+
+.translate-toggle,
+.theme-toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.translate-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 40;
+    display: none;
+    min-width: 220px;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: var(--shadow);
+}
+
+.translate-widget-shell.is-open .translate-panel {
+    display: block;
 }
 
 .utility-label {
@@ -639,6 +667,7 @@ body[data-theme="dark"] input[type="text"] {
 body[data-theme="dark"] .primary-button,
 body[data-theme="dark"] .secondary-button,
 body[data-theme="dark"] .theme-toggle,
+body[data-theme="dark"] .translate-toggle,
 body[data-theme="dark"] #google_translate_element .goog-te-combo {
     background: #ffffff !important;
     color: #000000 !important;
@@ -650,6 +679,8 @@ body[data-theme="dark"] .primary-button:hover,
 body[data-theme="dark"] .secondary-button:hover,
 body[data-theme="dark"] .theme-toggle:hover,
 body[data-theme="dark"] .theme-toggle:focus-visible,
+body[data-theme="dark"] .translate-toggle:hover,
+body[data-theme="dark"] .translate-toggle:focus-visible,
 body[data-theme="dark"] .site-nav a:hover,
 body[data-theme="dark"] .site-nav a:focus-visible {
     background: #000000 !important;

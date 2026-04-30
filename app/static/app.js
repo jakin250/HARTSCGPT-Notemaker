@@ -11,6 +11,8 @@ const copyResultButton = document.getElementById("copyResultButton");
 const draftResult = document.getElementById("draftResult");
 const maxFiles = fileInput ? Number(fileInput.dataset.maxFiles || "0") : 0;
 const themeToggle = document.getElementById("themeToggle");
+const translateWidget = document.getElementById("translateWidget");
+const translateToggle = document.getElementById("translateToggle");
 
 function applyTheme(theme) {
     document.body.dataset.theme = theme;
@@ -18,8 +20,9 @@ function applyTheme(theme) {
 
     if (themeToggle) {
         const isDark = theme === "dark";
-        themeToggle.textContent = isDark ? "Light mode" : "Dark mode";
-        themeToggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+        themeToggle.textContent = isDark ? "☀️" : "🌙";
+        themeToggle.setAttribute("aria-checked", String(isDark));
+        themeToggle.setAttribute("aria-label", isDark ? "Toggle light mode" : "Toggle dark mode");
     }
 }
 
@@ -54,6 +57,26 @@ function initializeTranslateWidget() {
     script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
     script.async = true;
     document.head.appendChild(script);
+}
+
+
+
+function initializeTranslateToggle() {
+    if (!translateWidget || !translateToggle) {
+        return;
+    }
+
+    translateToggle.addEventListener("click", () => {
+        const isOpen = translateWidget.classList.toggle("is-open");
+        translateToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!translateWidget.contains(event.target)) {
+            translateWidget.classList.remove("is-open");
+            translateToggle.setAttribute("aria-expanded", "false");
+        }
+    });
 }
 
 function updatePromptPreview(promptId) {
@@ -140,4 +163,5 @@ if (document.body.dataset.hasResult === "true") {
 
 initializeTheme();
 initializeTranslateWidget();
+initializeTranslateToggle();
 
